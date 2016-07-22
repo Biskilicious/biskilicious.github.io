@@ -1,0 +1,129 @@
+---
+layout: post
+title:  "Configuring cx_Oracle for Python on Mac El Capitan"
+date:   2016-07-21 15:03:09 -0700
+categories: Mac Python Oracle cx_Oracle
+---
+It took me  along time to configure Oracle Instant Client on my Macbook.  I spent abut 6 hours reading through various blog posts and other recommendations on the web that took me down several different rabbit holes. I wanted to take a minute to document the steps in the event that someone else experiences the same types of issues that I had.  
+
+I am running OS X El Capitan 10.11.5 on a Macbook Pro.  I want to connect to remote databases within a firewalled network using the databases that I have configured in my tnsnames.ora file.
+
+First, download the Instant Client packages from the Oracle site (you will need to register and accept the EULA to download):
+[Oracle Instant Client][oracle-download]
+
+Remember to chose the 64-bit versions or cx_Oracle will fail to compile.
+
+1. instantclient-basic-macos.x64-12.1.0.2.0.zip
+2. instantclient-sqlplus-macos.x64-12.1.0.2.0.zip
+3. instantclient-sdk-macos.x64-12.1.0.2.0.zip
+
+From the Downloads directory, unzip each file:
+{% highlight shell %}
+unzip instantclient-basic-macos.x64-12.1.0.2.0.zip
+unzip instantclient-sqlplus-macos.x64-12.1.0.2.0.zip
+unzip instantclient-sdk-macos.x64-12.1.0.2.0.zip
+{% endhighlight %}
+
+Using the unzip tool at the command line will unzip all of the files into a single working directory "instantclient_12_1".
+
+Next, move that directory out of the Downloads directory to the location that will ultimately be $ORACLE_HOME. Although there are sites that direct you to install the client in the /opt or /usr directory, I didn't want to install it there.  I prefer to install this in my own /User directory so that I can more easily clone my directory from machine to machine, which I have named "oracleclient".
+
+{% highlight shell %}
+mv instantclient_12_1 ~/oracleclient
+{% endhighlight %}
+
+Create a lib directory and move the dylib files into it:
+{% highlight shell %}
+cd ~/oracleclient
+mkdir lib
+mv "*.dylib*" lib
+cd lib
+{% endhighlight %}
+
+There are a few soft links that had to be created:
+{% highlight shell %}
+ln -s libclntsh.dylib.12.1 libclntsh.dylib
+ln -s libocci.dylib.12.1 libocci.dylib
+{% endhighlight %}
+
+Back out of lib and create the directory structure for tnsnames.ora. I have this file already from work, so am copying it into the directory. You may have to create one of your own, which I will leave you to Google for syntax.
+{% highlight shell %}
+cd ..
+mkdir network
+mkdir network/admin
+cp ~/Downloads/tnsname.ora network/admin/tnsnames.ora
+{% endhighlight %}
+
+Set the environment variables and reload your shell.
+{% highlight shell %}
+vi ~/.bash_profile
+#insert the following
+export ORACLE_HOME=~/oracleclient
+export DYLD_LIBRARY_PATH=$ORACLE_HOME
+export PATH=$ORACLE_HOME:$PATH
+{% endhighlight %}
+
+Exit out of vi and execute the .bash_profile or load a new terminal.
+
+Test to be sure you can access your database via SQLPLus:
+{% highlight shell %}
+sqlplus scott/tiger@oracle
+
+
+SQL*Plus: Release 12.1.0.2.0 Production on Thu Jul 21 15:46:07 2016
+
+Copyright (c) 1982, 2016, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+
+SQL>
+{% endhighlight %}
+
+With that successful test, you can switch your attention to Python.  I tried a lot of different methods, but the steps documented at this location were the steps that actually got it to work:
+
+[thom-nic GitHub page][gist-github]
+
+I kept receiving errors related to libclntsh.dylib.12.1 while using PIP so chose the source path instead.
+
+I downloaded the source from the Python packages site: [PyPi][python-package].  Get the full URL from that site, as it will have changed by the time you are downloading it.
+{% highlight shell %}
+curl -O https://pypi.python.org/packages/95/7f/3b74fe3adeb5948187b760330cb7e9175e3484bd6defdfeb9b504d71b4b3/cx_Oracle-5.2.1.tar.gz
+tar -xvf cx_Oracle-5.2.1.tar.gz
+cd cx_Oracle-5.2.1
+{% endhighlight %}
+
+After MANY installation attempts and several blog posts later, THIS is the step that ultimately proved successful:
+
+{% highlight shell %}
+env ARCHFLAGS="-arch x86_64" python setup.py build
+sudo python setup.py install
+{% endhighlight %}
+
+Setting the ARCHFLAGS variable overrides a security exception set in Macs for passing 32-bit libraries across sudo (please don't quote me on this one!).
+
+Once the build and install were successful, I could test cx_Oracle:
+
+{% highlight shell %}
+REM-U223415L001-2:~ 223415$ python
+Python 2.7.10 (default, Oct 23 2015, 19:19:21)
+[GCC 4.2.1 Compatible Apple LLVM 7.0.0 (clang-700.0.59.5)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+{% endhighlight %}
+{% highlight python %}
+import cx_Oracle
+con = cx_Oracle.connect('scott/tiger@oracle')
+con.version
+'11.2.0.4.0'
+con.close()
+exit()
+{% endhighlight %}
+
+And, now I'm ready to go!
+
+[oracle-download]:http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html
+[gist-github]:https://gist.github.com/thom-nic/6011715
+[python-package]:https://pypi.python.org/pypi/cx_Oracle/5.2.1
