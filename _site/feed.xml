@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Place to Document Stuff</title>
+    <description>A blog for me to post the knowledge, notes and other miscellaneous information accumulated in various projects and activities.</description>
+    <link>http://biskilicious.github.io/</link>
+    <atom:link href="http://biskilicious.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Fri, 22 Jul 2016 08:33:39 -0700</pubDate>
+    <lastBuildDate>Fri, 22 Jul 2016 08:33:39 -0700</lastBuildDate>
+    <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Configuring cx_Oracle for Python on Mac El Capitan</title>
+        <description>&lt;p&gt;It took me  along time to configure Oracle Instant Client on my Macbook.  I spent abut 6 hours reading through various blog posts and other recommendations on the web that took me down several different rabbit holes. I wanted to take a minute to document the steps in the event that someone else experiences the same types of issues that I had.&lt;/p&gt;
+
+&lt;p&gt;I am running OS X El Capitan 10.11.5 on a Macbook Pro.  I want to connect to remote databases within a firewalled network using the databases that I have configured in my tnsnames.ora file.&lt;/p&gt;
+
+&lt;p&gt;First, download the Instant Client packages from the Oracle site (you will need to register and accept the EULA to download):
+&lt;a href=&quot;http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html&quot;&gt;Oracle Instant Client&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Remember to chose the 64-bit versions or cx_Oracle will fail to compile.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;instantclient-basic-macos.x64-12.1.0.2.0.zip&lt;/li&gt;
+  &lt;li&gt;instantclient-sqlplus-macos.x64-12.1.0.2.0.zip&lt;/li&gt;
+  &lt;li&gt;instantclient-sdk-macos.x64-12.1.0.2.0.zip&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;From the Downloads directory, unzip each file:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;unzip instantclient-basic-macos.x64-12.1.0.2.0.zip
+unzip instantclient-sqlplus-macos.x64-12.1.0.2.0.zip
+unzip instantclient-sdk-macos.x64-12.1.0.2.0.zip&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Using the unzip tool at the command line will unzip all of the files into a single working directory “instantclient_12_1”.&lt;/p&gt;
+
+&lt;p&gt;Next, move that directory out of the Downloads directory to the location that will ultimately be $ORACLE_HOME. Although there are sites that direct you to install the client in the /opt or /usr directory, I didn’t want to install it there.  I prefer to install this in my own /User directory so that I can more easily clone my directory from machine to machine, which I have named “oracleclient”.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mv instantclient_12_1 ~/oracleclient&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Create a lib directory and move the dylib files into it:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/oracleclient
+mkdir lib
+mv &lt;span class=&quot;s2&quot;&gt;&quot;*.dylib*&quot;&lt;/span&gt; lib
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;lib&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;There are a few soft links that had to be created:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;ln -s libclntsh.dylib.12.1 libclntsh.dylib
+ln -s libocci.dylib.12.1 libocci.dylib&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Back out of lib and create the directory structure for tnsnames.ora. I have this file already from work, so am copying it into the directory. You may have to create one of your own, which I will leave you to Google for syntax.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ..
+mkdir network
+mkdir network/admin
+cp ~/Downloads/tnsname.ora network/admin/tnsnames.ora&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Set the environment variables and reload your shell.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;vi ~/.bash_profile
+&lt;span class=&quot;c&quot;&gt;#insert the following&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ORACLE_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/oracleclient
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DYLD_LIBRARY_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ORACLE_HOME&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ORACLE_HOME&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Exit out of vi and execute the .bash_profile or load a new terminal.&lt;/p&gt;
+
+&lt;p&gt;Test to be sure you can access your database via SQLPLus:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sqlplus scott/tiger@oracle
+
+
+SQL&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Plus: Release 12.1.0.2.0 Production on Thu Jul 21 15:46:07 2016
+
+Copyright &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1982, 2016, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
+With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
+Data Mining and Real Application Testing options
+
+SQL&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;With that successful test, you can switch your attention to Python.  I tried a lot of different methods, but the steps documented at this location were the steps that actually got it to work:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://gist.github.com/thom-nic/6011715&quot;&gt;thom-nic GitHub page&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I kept receiving errors related to libclntsh.dylib.12.1 while using PIP so chose the source path instead.&lt;/p&gt;
+
+&lt;p&gt;I downloaded the source from the Python packages site: &lt;a href=&quot;https://pypi.python.org/pypi/cx_Oracle/5.2.1&quot;&gt;PyPi&lt;/a&gt;.  Get the full URL from that site, as it will have changed by the time you are downloading it.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -O https://pypi.python.org/packages/95/7f/3b74fe3adeb5948187b760330cb7e9175e3484bd6defdfeb9b504d71b4b3/cx_Oracle-5.2.1.tar.gz
+tar -xvf cx_Oracle-5.2.1.tar.gz
+&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;cx_Oracle-5.2.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;After MANY installation attempts and several blog posts later, THIS is the step that ultimately proved successful:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;env &lt;span class=&quot;nv&quot;&gt;ARCHFLAGS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-arch x86_64&quot;&lt;/span&gt; python setup.py build
+sudo python setup.py install&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Setting the ARCHFLAGS variable overrides a security exception set in Macs for passing 32-bit libraries across sudo (please don’t quote me on this one!).&lt;/p&gt;
+
+&lt;p&gt;Once the build and install were successful, I could test cx_Oracle:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;REM-U223415L001-2:~ 223415&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python
+Python 2.7.10 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default, Oct 23 2015, 19:19:21&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;GCC 4.2.1 Compatible Apple LLVM 7.0.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;clang-700.0.59.5&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt; on darwin
+Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;copyright&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;credits&quot;&lt;/span&gt; or &lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;cx_Oracle&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cx_Oracle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;scott/tiger@oracle&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;
+&lt;span class=&quot;s&quot;&gt;&#39;11.2.0.4.0&#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And, now I’m ready to go!&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 21 Jul 2016 15:03:09 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/oracle/cx_oracle/2016/07/21/cx_Oracle.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/oracle/cx_oracle/2016/07/21/cx_Oracle.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Oracle</category>
+        
+        <category>cx_Oracle</category>
+        
+      </item>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;Tom&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &#39;Hi, Tom&#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 21 Jul 2016 14:23:09 -0700</pubDate>
+        <link>http://biskilicious.github.io/jekyll/update/2016/07/21/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/jekyll/update/2016/07/21/welcome-to-jekyll.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+  </channel>
+</rss>
