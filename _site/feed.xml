@@ -5,9 +5,765 @@
     <description>A blog for me to post the knowledge, notes and other miscellaneous information accumulated in various projects and activities.</description>
     <link>http://biskilicious.github.io/</link>
     <atom:link href="http://biskilicious.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Fri, 22 Jul 2016 08:33:39 -0700</pubDate>
-    <lastBuildDate>Fri, 22 Jul 2016 08:33:39 -0700</lastBuildDate>
+    <pubDate>Thu, 20 Jul 2017 11:17:02 -0700</pubDate>
+    <lastBuildDate>Thu, 20 Jul 2017 11:17:02 -0700</lastBuildDate>
     <generator>Jekyll v3.1.6</generator>
+    
+      <item>
+        <title>Adding a Form to my Quote Application in Django</title>
+        <description>&lt;p&gt;Here,&lt;/p&gt;
+</description>
+        <pubDate>Thu, 20 Jul 2017 10:29:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Forms-to-Django.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Forms-to-Django.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+        <category>Application</category>
+        
+      </item>
+    
+      <item>
+        <title>Adding Rates and Admin Tweaking in Django</title>
+        <description>&lt;p&gt;I have completed more or less the skeleton of functionality for the rating application. Now it is time to start adding more parameters and rates so that I can get a more realistic sense of how it will be rated. I have no idea what the company is using for rates, but will start with something relatively simple.&lt;/p&gt;
+
+&lt;p&gt;In the last exercise, I was able to create a services.py and get the application to insert it as a layer of logic between the model and the view layer. This way, I can isolate the combining of the two objects and perform basic mathematical functions against the two. For example, if I configure a rate for Number Of Plants to be $15.00 er plant, then the number of plants that the user enters will be multiplied by $15.00 to give me the premium quote.&lt;/p&gt;
+
+&lt;p&gt;Putting it all together, I ended up with the following…&lt;/p&gt;
+
+&lt;p&gt;I added the additional parameters to the Quote model in models.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;    &lt;span class=&quot;n&quot;&gt;percent_recreational&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PositiveSmallIntegerField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;separate_records&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BooleanField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;maximum_plants&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;PositiveSmallIntegerField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;testing_lab&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BooleanField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;stream_of_commerce&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BooleanField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DecimalField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_digits&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;decimal_places&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I then updated services.py to look-up each parameter and return the rate value for the given parameter. It then adds each of those quote parameters together to combine a single Quote.&lt;/p&gt;
+
+&lt;p&gt;I kept this separated for now, as I don’t know how the rates are calculated. As I learn more about the quoting process, I’ll be able to adjust each individually without having to recode the entire method if I were to make it more dynamic and parameter driven.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getFarmQuote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;growRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;grow_operations&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grow_operations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;percent_recreational&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;percent_recreational&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;percent&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;percent_recreational&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;sepRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;separate_records&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;separate_records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maximum_plants&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;maximum_plants&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;plant&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maximum_plants&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing_lab&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;testing_lab&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing_lab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream_of_commerce&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;stream_of_commerce&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream_of_commerce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sepRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Finally, I updated the template to display all of the parameters of the quote in quote_detail.html (by the way, I renamed the quoteDetail to quote_detail. I think my java days of the lowerUpper naming convention were kicking in, but to stick with the Django tutorial style, I decided to use the first_second naming convention).&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;table&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Business Operation Type:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Grow Operations:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Percent Recreational:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;%&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Separate Records:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Maximum Plants:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Use Testing Lab:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Stream of Commerce:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;tr&amp;gt;&amp;lt;td&amp;gt;&lt;/span&gt;Quote:&lt;span class=&quot;nt&quot;&gt;&amp;lt;/td&amp;gt;&amp;lt;td&amp;gt;&amp;lt;/td&amp;gt;&amp;lt;/tr&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/table&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I didn’t need to make any adjustments to urls.py or views.py (other than the name change to quote_detail), as I have already configured those to work end-to-end.&lt;/p&gt;
+
+&lt;p&gt;I added the additional parameters to the FarmRate using the Admin interface:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/admin_params.png&quot; alt=&quot;Farm Rate Admin Parameters&quot; class=&quot;img-responsive&quot; height=&quot;400x&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now, I should see the entire quote from the front-end after the services.py calcuations have been applied to the quote:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/updated_farm_quote.png&quot; alt=&quot;Updated Farm Quote&quot; class=&quot;img-responsive&quot; height=&quot;300x&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I’ll pretty everything up after I complete more features of the application, but for now, plain is just fine for me!&lt;/p&gt;
+
+&lt;p&gt;One of the other activities I completed in this round was to modify the FarmRate view in the admin screen so that I could see all of the parameters and their values in a list, rather than only one column. This was a relatively simple add by doing the following in admin.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;django.contrib&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FarmRate&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FarmRateAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ModelAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;list_display&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quote_parameter&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;parameter_name&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;parameter_value&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+
+&lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FarmRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FarmRateAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This is why the above screenshot is in a nice list display instead of just the single returned value.&lt;/p&gt;
+
+&lt;p&gt;Next, I need to start putting the QuoteForm in place. Once that is in place and is returning the quote from the user’s input variables, that should be a basic, fully featured application. After that, it’s just a matter of adding features, making it user friendly, and, of course, making it pretty.&lt;/p&gt;
+
+&lt;p&gt;On to the next exercise!&lt;/p&gt;
+</description>
+        <pubDate>Thu, 20 Jul 2017 09:56:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/20/Django-Admin-and-Rates.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/20/Django-Admin-and-Rates.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+        <category>Application</category>
+        
+      </item>
+    
+      <item>
+        <title>Adding a Second Application in Django</title>
+        <description>&lt;p&gt;This is where I think Django offers a lot more features and functionality. I want to add a registration application where users can Register for the site, then submit more information for adding an address and other pertinent information. This should then be usable to create an overall Application.&lt;/p&gt;
+
+&lt;p&gt;I don’t want to make this overwhelmingly complicated, so I am going to create a simple user registration, then an Insurance Application applicaiton. There should be a module that allows me to create the registration, so let me read through the Django documentation and find out. BRB…&lt;/p&gt;
+
+&lt;p&gt;So, let’s start with the registration portion first.&lt;/p&gt;
+
+&lt;p&gt;Following the documentation on the Django website, and another tutorial someone was gracious enough to post, I have added a basic login and logout functionality by doing the following:&lt;/p&gt;
+
+&lt;p&gt;In settings.py, I added the following to the TEMPLATES param:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;TEMPLATES &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&#39;DIRS&#39;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;./CannaInsureRate/templates&#39;&lt;/span&gt;,],&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then, I created those directories under the master site directory.&lt;/p&gt;
+
+&lt;p&gt;I then added a template for each of login.html and logged_out.html, which are two default templates that Django looks for in those directories.&lt;/p&gt;
+
+&lt;p&gt;Lastly, I want the login to redirect to the application I just build (rateapp), so I added the following line to the bottom of settings.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;LOGIN_REDIRECT_URL &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;/rateapp/&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;In my login.html, I added the following basic login information:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;block title %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;Login&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endblock %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;block content %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+  &amp;lt;h2&amp;gt;Login&amp;lt;/h2&amp;gt;
+  &amp;lt;form &lt;span class=&quot;nv&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;post&quot;&lt;/span&gt;&amp;gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% csrf_token %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;{{&lt;/span&gt; form.as_p &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;
+    &amp;lt;button &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;submit&quot;&lt;/span&gt;&amp;gt;Login&amp;lt;/button&amp;gt;
+  &amp;lt;/form&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;endblock %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And in the master project urls.py, I added the following:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;&#39;^login/$&#39;&lt;/span&gt;, auth_views.login, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;login&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;&#39;^logout/$&#39;&lt;/span&gt;, auth_views.logout, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;logout&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Reloading the server renders the correct login form and redirects to the rateapp index page:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/login_page.png&quot; alt=&quot;Login Page&quot; class=&quot;img-responsive&quot; height=&quot;250px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And after logging in…&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/after_login.png&quot; alt=&quot;Login Page&quot; class=&quot;img-responsive&quot; height=&quot;125px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I completed everything using the tutorial at this location. It was perfect. It provided working examples, explanations and most importantly, everything worked!&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication&quot;&gt;Django Tutorial&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Tue, 18 Jul 2017 19:51:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-a-Second-Application.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-a-Second-Application.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+        <category>Application</category>
+        
+      </item>
+    
+      <item>
+        <title>Adding Business Logic to the First Application</title>
+        <description>&lt;p&gt;Here is where the proverbial rubber hits the road. I have a basic object that is saved to the database via the Admin interface (I will create the form later), and it is being displayed from the front-end. Now, I want to include a new object that sets rates according to the parameters and calculate those rates on the fly based on each of the Quote object’s parameters that are passed to it. This should return a QuoteResponse that will be the fundametal basis of how this entire application works.&lt;/p&gt;
+
+&lt;p&gt;I will repeat the prior steps for building a new FarmRate object as I completed for the Quote. In this object, I will need to define rates for each of the selectable parameters. For example, under grow_operations, there are three choices; outdoor, indoor and greenhouse. Each will have it’s own corresponding rate value. The object will then have a quote_parameter field (in this case, grow_operation), a quote_name field and finally, a quote_value.&lt;/p&gt;
+
+&lt;p&gt;I’ll add the following to models.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from django.db import models
+
+class FarmRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;models.Model&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    quote_parameter &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    parameter_name &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    parameter_value &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.DecimalField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;max_digits&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10, &lt;span class=&quot;nv&quot;&gt;decimal_places&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then enable that new object in my Admin screen (since it is a new model, I need to run a makemigrations command):&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py makemigrations rateapp
+
+Migrations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;rateapp&#39;&lt;/span&gt;:
+  rateapp/migrations/0002_auto_20170718_2258.py
+    - Create model FarmRate
+    - Alter field business_type on quote
+    - Alter field grow_operations on quote
+
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, rateapp, sessions
+Running migrations:
+  Applying rateapp.0002_auto_20170718_2258... OK&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Add to admin.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from django.contrib import admin
+from .models import Quote, FarmRate
+
+admin.site.register&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Quote&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+admin.site.register&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;FarmRate&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then start the server and load up the Admin page:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/admin_farmrate.png&quot; alt=&quot;Admin Farm Rate object&quot; class=&quot;img-responsive&quot; height=&quot;300px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And then add an actual rate for the grow_operations parameter:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/admin_farmratedetails.png&quot; alt=&quot;Admin Farm Rate Details&quot; class=&quot;img-responsive&quot; height=&quot;300px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now I have a way to create a rate for each of the parameters in the Quote. These should be able to extend easily as I build the quote object out to include new parameters.&lt;/p&gt;
+
+&lt;p&gt;The next exercise is to combine the quote parameters with the actual rates to come up with a base quote. In J2EE this would be helper classes, and I am suspecting the same here, where we will create a Python class that accepts quote as input, queries for the rates, then calculates each field. Let’s dive in and see!&lt;/p&gt;
+
+&lt;p&gt;OK, so this was easier than I thought. I create a services.py file for capturing the business logic. It’s not doing anything yet, just querying the quote and the rates and returning the quote without any actual data crunching. This will come shortly.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from .models import Quote, FarmRate
+
+def getFarmQuote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Quote.objects.get&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    farmRate &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; FarmRate.objects.all&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;quote&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Next, I modified the views.py to get the quote from services.py instead of directly from the model:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from .services import getFarmQuote
+
+def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; getFarmQuote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;&#39;rateapp/quoteDetail.html&#39;&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quote&#39;&lt;/span&gt;: quote&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now, refreshing the browser, I get the quote details returned from the service module instead of directly from the database model. Perfect! Now I just need to match up the rate values with the quote input parameters.&lt;/p&gt;
+
+&lt;p&gt;To do this, I modified services.py to include the logic for retrieving a FarmRate record and matching the parameter. Once the rate is retrieved, I can apply the rate to the Quote as follows:&lt;/p&gt;
+
+&lt;p&gt;In services.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from .models import Quote, FarmRate
+
+def getFarmQuote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Quote.objects.get&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    quote.rate &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; getRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;grow_operations&#39;&lt;/span&gt;, quote.grow_operations&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;quote
+
+def getRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;param, paramType&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+
+    farmRate &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; FarmRate.objects.get&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        quote_parameter &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; param,
+        parameter_name &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; paramType
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;farmRate.parameter_value&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This will take the quote sent from the front-end, query the database for it by the quote_id, retrieve the rate based on the parameters passed from the quote and return the rate.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/rate_detail.png&quot; alt=&quot;Rate Detail&quot; class=&quot;img-responsive&quot; height=&quot;150px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;And I can now see the rate retrieved for Greenhouse…&lt;/p&gt;
+
+&lt;p&gt;To test the others, I’ll create some records for the other grow_operation types and set different rates for those.&lt;/p&gt;
+
+&lt;p&gt;At this point, everything is very simple, but functional. Obviously, this will start to expand out, but for now, I think this is a good starting place.&lt;/p&gt;
+
+&lt;p&gt;I think it is best to detour here. Although the rating functionality is very cool, I don’t know how I’ll be able to build a rating application without the rates. Therefore, I will start working on a second application, which is the application for a new insurance poilcy.&lt;/p&gt;
+
+&lt;p&gt;After reviewing the web, it seems that most insurers are using a PDF form that can be downloaded, or you fill out a contact form and submit it. I will accomplish the same, but put everything on-line so that I can capture the information and start the quote process without over-burdening the customer by filling out an entire application.&lt;/p&gt;
+
+&lt;p&gt;Let’s start a new post for that one!&lt;/p&gt;
+</description>
+        <pubDate>Tue, 18 Jul 2017 16:03:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-Business-Logic.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-Business-Logic.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+        <category>Application</category>
+        
+      </item>
+    
+      <item>
+        <title>Building Out the First Application in Django</title>
+        <description>&lt;p&gt;Now that the basic application has been setup, it is time to start building out the application. In hindsight, I should have named the application so that it was specific to a certain type, for example, farmrateapp, for rating farms. But, I will build this first one as a generic template that I can copy into the other for easier integration.&lt;/p&gt;
+
+&lt;p&gt;I pulled the application from the CannaSure website. It is a standard application that has all business types contained within the same application. Here, we want to focus on just the elements that are specific to rating farms. I believe these will be the number of plants, crop yield, crop value, equipment and number of employees.&lt;/p&gt;
+
+&lt;p&gt;Here, we will start with the first two: Business Type (Farm) and Grow Operations Type (indoor, outdoor, or greenhouse). To add these two elements, we have to first build out the model. In this case, our model is the Quote (later to be renamed to FarmQuote). In it, I will include two fields; BusinessType and GrowOperation.&lt;/p&gt;
+
+&lt;p&gt;From rateapp/models.py, I will add the following object (class):&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from django.db import models
+
+class Quote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;models.Model&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    business_type &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    grow_operations &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I need to add the rateapp to the master site as follows in CannaInsureRate/settings.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;INSTALLED_APPS &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&#39;rateapp.apps.RateappConfig&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.admin&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.auth&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.contenttypes&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.sessions&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.messages&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.staticfiles&#39;&lt;/span&gt;,
+&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I verified that the rateapp is present in the rateapp/apps.py file.&lt;/p&gt;
+
+&lt;p&gt;Next, I need to build the initial objects for creating the objects in the database:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py makemigrations rateapp
+
+Migrations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;rateapp&#39;&lt;/span&gt;:
+  rateapp/migrations/0001_initial.py
+    - Create model Quote&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Finally, I need to build the objects in the database. Again, at this point, I am using sqlite, the default database in Django, but will be switching to PostreSQL once the framework has been laid.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate
+
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, rateapp, sessions
+Running migrations:
+  Applying rateapp.0001_initial... OK&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;At this point, the documentation goes through how a developer can use the command line to build out and communicate with models, but I have made this simple enough that everything should work ok.&lt;/p&gt;
+
+&lt;p&gt;There is an issue with what I want the object to return when queried. Ultimately, I would like each record to return a unique ID which includes the person’s name, date, and quote number. I believe each object has a hidden unique ID that is automatically generated by Django. Let me research that and see if I can add that to the object.&lt;/p&gt;
+
+&lt;p&gt;After looking at the SQL, I can add the following to the object in models.py:&lt;/p&gt;
+
+&lt;p&gt;//can’t use ID here. Probably a type casting issue. Switching to business type for now.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;def __str__&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+  &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;self.id&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Instead of using the command line test everything, I think I want to start with the Admin module. To enable the model so that we can see it in the admin module, we need to add the following to admin.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from .models import Quote
+
+admin.site.register&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Quote&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;With this, I can see the Quote in the admin module, but if I try to save it, it will error. To fix this issue, I needed to change the return type from ID to the business type (for now).&lt;/p&gt;
+
+&lt;p&gt;Next, I want to restrict the choices for each of these parameters to include only those that I am currently accepting by adding choices to each of the fields, which Django will render as pulldonwn menus:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    FARM &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Farm&#39;&lt;/span&gt;
+    BUSINESS_TYPE_CHOICES &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;FARM, &lt;span class=&quot;s1&quot;&gt;&#39;Farm&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    business_type &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20,
+        &lt;span class=&quot;nv&quot;&gt;choices&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;BUSINESS_TYPE_CHOICES,
+        &lt;span class=&quot;nv&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;FARM
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    OUTDOOR &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Outdoor&#39;&lt;/span&gt;
+    INDOOR &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Indoor&#39;&lt;/span&gt;
+    GREENHOUSE &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Greenhouse&#39;&lt;/span&gt;
+
+    OPERATION_TYPE_CHOICES &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;OUTDOOR, &lt;span class=&quot;s1&quot;&gt;&#39;Outdoor&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;INDOOR, &lt;span class=&quot;s1&quot;&gt;&#39;Indoor&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;GREENHOUSE, &lt;span class=&quot;s1&quot;&gt;&#39;Greenhouse&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    grow_operations &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10,
+        &lt;span class=&quot;nv&quot;&gt;choices&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;OPERATION_TYPE_CHOICES
+    &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Next, I need to render this Model to the front-end, i.e. outside of the Admin module. To do that, I’ll start with a page that will list out all of the quotes that have been submitted to date. This is essentially just a list of the quotes in the database without a filter.&lt;/p&gt;
+
+&lt;p&gt;This is relatively straightforard. Modify rateapp/views.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from django.shortcuts import render
+from django.http import HttpResponse
+from .models import Quote
+
+def index&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    quotes_list &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Quote.objects.all&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+    context &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quotes_list&#39;&lt;/span&gt;: quotes_list&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;&#39;rateapp/index.html&#39;&lt;/span&gt;, context&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Then, create rateapp/templates/rateapp/index.html&lt;/p&gt;
+
+&lt;p&gt;Then, within that new template, add the following:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;quotes_list %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &amp;lt;ul&amp;gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;quote &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;quotes_list %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+        &amp;lt;li&amp;gt;&amp;lt;a &lt;span class=&quot;nv&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/rateapp/{{ quote.id }}/&quot;&lt;/span&gt;&amp;gt;&lt;span class=&quot;o&quot;&gt;{{&lt;/span&gt; quote.business_type &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+    &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endfor %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &amp;lt;/ul&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &amp;lt;p&amp;gt;No quotes are available.&amp;lt;/p&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;endif %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Rebooting the server (the application didn’t auto-refresh to include the Quote list), I can now see the single record I entered in the Admin section.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/quotes_list.png&quot; alt=&quot;Quote List&quot; class=&quot;img-responsive&quot; height=&quot;100px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On clicking the first (and only) Quote, however, Django will return an error, because I have not given instruction for that link yet. I will add a 404 Not Found logic as follows:&lt;/p&gt;
+
+&lt;p&gt;In views.py:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;from django.shortcuts import get_object_or_404, render
+
+....
+
+def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
+    quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; get_object_or_404&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Quote, &lt;span class=&quot;nv&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;&#39;rateapp/quoteDetail.html&#39;&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quote&#39;&lt;/span&gt;: quote&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now, reloading the page will return a 404 Not Found error, which will be replaced with an actual page in the future.&lt;/p&gt;
+
+&lt;p&gt;Once that is taken care of, I need to now load the detail for a Quote request. In other words, from the quote list, I should be able to select a Quote and view the details of that particular quote. I am not going to add an actual quote to this yet, as I haven’t built that logic, but it should show me the two parameters that I have added to the model.&lt;/p&gt;
+
+&lt;p&gt;I’ve already defined the view (above), so now is just a matter of creating a template and setting the correct URL.&lt;/p&gt;
+
+&lt;p&gt;I created the template by adding a new file in rateapp/templates/rateapp/quoteDetail.html&lt;/p&gt;
+
+&lt;p&gt;I then added some basic information to that file:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&amp;lt;h1&amp;gt;&lt;span class=&quot;o&quot;&gt;{{&lt;/span&gt; quote.business_type &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;&amp;lt;/h1&amp;gt;
+&amp;lt;h1&amp;gt;&lt;span class=&quot;o&quot;&gt;{{&lt;/span&gt; quote.grow_operations &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;&amp;lt;/h1&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I then added a URL pattern for the new quoteDetail request:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;&#39;^(?P&amp;lt;quote_id&amp;gt;[0-9]+)/$&#39;&lt;/span&gt;, views.quoteDetail, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quoteDetail&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This will provide a list of quotes and the quote details to anyone that requests it. In the future, however, I want to make this an admin feature and only allow quotes to be viewed by the user that entered them. For that, I will have to change the query to render the quote based on the username, but I’ll get to that later. For now, this should be it to render the quoteDetail response.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/quote_detail.png&quot; alt=&quot;Quote Detail&quot; class=&quot;img-responsive&quot; height=&quot;150px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So far, so good. We now have our first object (Quote) capable of being entered in the Admin, then a list of Quotes dispolayed through the application, and the details for each quote avaiable on clicking the quote in the quote list. Overall, a pretty good start.&lt;/p&gt;
+
+&lt;p&gt;Next, I will work on building a FarmRate object that will be used by the Admin to list rate variables. This will be combined with a FarmRate ‘controller’, which will then be used to start the calculations and ultimately return the QuoteResponse.&lt;/p&gt;
+
+&lt;p&gt;I’ll start that in the next post.&lt;/p&gt;
+</description>
+        <pubDate>Tue, 18 Jul 2017 12:31:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/18/First-Application-in-Django.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/18/First-Application-in-Django.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+        <category>Application</category>
+        
+      </item>
+    
+      <item>
+        <title>Configuring Django for a New Project</title>
+        <description>&lt;p&gt;I just completed installing/upgrading Django on this machine. I will now walk through the configuration, setup and first project to get the environment created for the Insurance Rating Application.&lt;/p&gt;
+
+&lt;p&gt;Here, we need to create a new site, which will be the master site for all of the subapplications that I intend to build during this project. Since CannaSure is taken by the parent company, I will name it CannaInsureRate.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;django-admin startproject CannaInsureRate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;My Directory now looks like this:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;CannaInsureRate/
+  manage.py
+  CannaInsureRate/
+    wsgi.py
+    urls.py
+    settings.py
+    __init__.py&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Once this is complete, I should be able to test the installation and get Django to return a page:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py runserver&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And I get the following output:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;Performing system checks...
+
+System check identified no issues &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 silenced&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.
+
+You have 13 unapplied migration&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;. Your project may not work properly &lt;span class=&quot;k&quot;&gt;until &lt;/span&gt;you apply the migrations &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;app&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: admin, auth, contenttypes, sessions.
+Run &lt;span class=&quot;s1&quot;&gt;&#39;python manage.py migrate&#39;&lt;/span&gt; to apply them.
+
+July 18, 2017 - 15:15:18
+Django version 1.11.3, using settings &lt;span class=&quot;s1&quot;&gt;&#39;CannaInsureRate.settings&#39;&lt;/span&gt;
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CONTROL-C.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And opening a browser, I get the familiar “It Worked!” landing page:
+&lt;img src=&quot;/assets/django_landing_page.png&quot; alt=&quot;It Worked!&quot; class=&quot;img-responsive&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that the overall site infrastructure is in place, I can start to work on individual applications to get the application up and runing. I believe the first thing I want to do is add a login feature. I want the login to be either local login (i.e. local accounts or create an account with Google or Facebook, which is becoming standard in the web application world). Let’s begin with just the local account creation first.&lt;/p&gt;
+
+&lt;p&gt;I’ll need to create a new application for authentication. Luckily, Django already has developed this functionality for authentication and authorization. Information regarding this module can be found here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://docs.djangoproject.com/en/1.11/topics/auth/&quot;&gt;Django Authentication Documentation&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The first thing I need to do is create a SuperUser. This user will be used to adminster the application from here on out once everything is up and running. But, before I can do that, I need to enable a few features in Django; in particular, the INSTALLED_APPS and MIDDLEWARE in my settings.py file. After checking that both of them exist, Django still will not create the objects associated with them until I have enabled an application that will make use of them. To do this, I need to enable them using Django’s startproject command, which I have not yet done. Since, the authentication and authorization pieces are overriding all of the applications, I don’t want to create a single application for just authentication and authorization. Instead, I want to start building out my applications.&lt;/p&gt;
+
+&lt;p&gt;The first and most important application to get started is a simple farm rating application for property and general liability. This should accept as few as possible input parameters, process these then return a rate. So, let’s call this first one rateapp.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py startapp rateapp&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;This command generated the following on the filesystem:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;CannaInsureRate/
+  manage.py
+  CannaInsureRate/
+    wsgi.py
+    urls.py
+    settings.py
+    __init__.py
+  rateapp/
+    __init__.py
+    admin.py
+    apps.py
+    migrations/
+    models.py
+    tests.py
+    views.py&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now that the first application has been built, I want to start fleshing it out, but I am not going to go “big bang” and try to generate everything I think it will need. Instead, I am going to start with a parameter at a time and start incorporating the rules engine from the start.&lt;/p&gt;
+
+&lt;p&gt;I guess here would be a good time to explain that I intend to have the controller logic of the MVC framwork to include a callout to a rules engine. This will accept the parameters of the quote request object and perform processing on them by looking up each object that may contribute to the cost of the premium. Once the rules engine completes, the application will return the quote response to the user.&lt;/p&gt;
+
+&lt;p&gt;Therefore, the first few actions I will create will be to have a QuoteRequest object, where the user will enter their information, a RatingEngine controller, which will run the calculations, and a QuoteResponse object, which will return the quote to the user.&lt;/p&gt;
+
+&lt;p&gt;Before I start anything, I have a pesky warning message that keeps popping up indicating that I have not created my migrations in the database. So, to remove the warning, I need to run the migrate command:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Which returns:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying sessions.0001_initial... OK&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now, restarting the server, I have a ‘clean’ start:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py runserver 8001
+
+Performing system checks...
+
+System check identified no issues &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 silenced&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.
+July 18, 2017 - 16:40:43
+Django version 1.11.3, using settings &lt;span class=&quot;s1&quot;&gt;&#39;CannaInsureRate.settings&#39;&lt;/span&gt;
+Starting development server at http://127.0.0.1:8001/
+Quit the server with CONTROL-C.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now that the first request/response has been created for the rateapp application and have migrated the objects to the database, I can create the superuser:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py createsuperuser --username&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rbdundas --email&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rbdundas@gmail.com
+Password: 
+Password &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;again&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 
+Superuser created successfully.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;By default, Django has the admin module already enabled. Creating this SuperUser grants me access to that module. Using my browser, I can now navigate to my local site (http://127.0.0.1:8001/admin/login/?next=/admin/) and bring up the authentication page:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/django_admin_login.png&quot; alt=&quot;Django Admin Login&quot; class=&quot;img-responsive&quot; height=&quot;300px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Which now gives me access to the Django Admin module after authentication:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/django_admin_module.png&quot; alt=&quot;Django Admin Login&quot; class=&quot;img-responsive&quot; height=&quot;250px&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The admin module doesn’t contain any of my new application objects (models), however, the default User and Group objects are present.&lt;/p&gt;
+
+&lt;p&gt;Now that everything is setup and I have the application working, albeit in a very basic mode, it is time to start fleshing out the functionality. I think I will create a new post for that.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 17 Jul 2017 21:03:09 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/configuration/2017/07/17/Configuring-Django-for-New-Project.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/configuration/2017/07/17/Configuring-Django-for-New-Project.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+        <category>Configuration</category>
+        
+      </item>
+    
+      <item>
+        <title>Installing and Configuring Django</title>
+        <description>&lt;p&gt;I have reviewed and tested several web application frameworks over the years. Most recently, I have reviewed and built a few pages using Angular2. I am returning to Django because it is the most straight-forward web application framework. There is more or less a formula to follow when building new applications and I don’t have to spend my time troubleshooting a page. Although I may eventually return to the single page application javascript frameworks, I am more than content to stick with what I know and Django is a perfectly suited application framework.&lt;/p&gt;
+
+&lt;p&gt;The documentation here is really a repository for setting up a new project for rating insurance applications. The intent of the documentation is to keep a record of the steps that I have undertaken to create the application and how it was ultimately built and configured.&lt;/p&gt;
+
+&lt;p&gt;The instructions for downloading and installing Django are available in the documentation from the djangoprojects website:
+&lt;a href=&quot;https://docs.djangoproject.com/en/1.11/intro/install/&quot;&gt;Django Installation Instructions&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;For this project, I will be using PostgreSQL, however, for the initial prototyping, I may just use the sqlite database preconfigured with Django. Here is the link for now, but I will get into the database integration at a later step.
+&lt;a href=&quot;https://www.postgresql.org/&quot;&gt;PostgreSQL Website&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I should note here that I am using virtualenv and I need to post a write-up explaining how to install and configure virtualenv.&lt;/p&gt;
+
+&lt;p&gt;Following the instructions to download and install, I can see the following results in the test:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python
+Python 3.6.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;v3.6.0:41df79263a11, Dec 22 2016, 17:23:13&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;GCC 4.2.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Apple Inc. build 5666&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;dot 3&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt; on darwin
+Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;copyright&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;credits&quot;&lt;/span&gt; or &lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;import django
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;django.get_version&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+1.10.6
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;I checked the official released version of Django and can see that it is now at version 1.11.0; therefore, I am going to go ahead and update it. I am not planning to update Python at this time, even though it is at 3.6.2.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip update django
+ERROR: unknown &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;update&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pippip install -U django
+-bash: pippip: &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;not found
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip install -U django
+Collecting django
+  Downloading Django-1.11.3-py2.py3-none-any.whl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6.9MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    100% |████████████████████████████████| 7.0MB 211kB/s 
+Collecting pytz &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;from django&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Downloading pytz-2017.2-py2.py3-none-any.whl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;484kB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    100% |████████████████████████████████| 491kB 2.2MB/s 
+Installing collected packages: pytz, django
+  Found existing installation: Django 1.10.6
+    Uninstalling Django-1.10.6:
+      Successfully uninstalled Django-1.10.6
+Successfully installed django-1.11.3 pytz-2017.2
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now, re-running the installation version, I get the following:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python
+Python 3.6.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;v3.6.0:41df79263a11, Dec 22 2016, 17:23:13&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;GCC 4.2.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Apple Inc. build 5666&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;dot 3&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt; on darwin
+Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;copyright&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;credits&quot;&lt;/span&gt; or &lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;import django
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;django.get_version&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+1.11.3
+&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Now that Django has been installed and tested, I will move on to configuration and configuration of the project.&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 17 Jul 2017 18:03:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/python/django/2017/07/17/Setting-Up-Django.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/2017/07/17/Setting-Up-Django.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Python</category>
+        
+        <category>Django</category>
+        
+      </item>
+    
+      <item>
+        <title>Getting Back to iOS Development Using Swift</title>
+        <description>&lt;p&gt;After taking a break to actually get some work done, I am now returning to XCode to see if I can make some progress on my application. The app itself is not unlike any other business type of apps. I want to capture specific sets of data from the user, save that information to the cloud, then return the collection of data to the user in the form of graphs or charts.  Essentially, it is a progress application where the user will enter weights over time, and the application will display the trend in increased or decreased weight.  It’s basic, simple and a good place to start learning to code in iOS.&lt;/p&gt;
+
+&lt;p&gt;I’ll be using Firebase to capture the data, and return it back to the screen.  I’m not quite sure what I’ll be using for the charts, but the first milestone will be to create an application to capture weight and save it to Firebase.&lt;/p&gt;
+
+&lt;p&gt;I started with the Single VIew application template in XCode and named it “WeightTracker”.  I then created the application in my Firebase console, using the bundle name “com.rbdundas.WeightTracker”, and copied the GoogleService-info.plist into the project.  I already have CocoaPods installed, so am not going to bother documenting that step here, but I will note that I ran the following in the terminal:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;EM-U223415L001-2:WeightTracker 223415&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pod init
+REM-U223415L001-2:WeightTracker 223415&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;vi Podfile
+REM-U223415L001-2:WeightTracker 223415&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pod install
+Analyzing dependencies
+Downloading dependencies
+Installing Firebase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Installing FirebaseAnalytics &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.2.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Installing FirebaseDatabase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Installing FirebaseInstanceID &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.0.7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Installing GoogleInterchangeUtilities &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.2.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Installing GoogleSymbolUtilities &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.1.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Installing GoogleUtilities &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.3.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Generating Pods project
+Integrating client project
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;!] Please close any current Xcode sessions and use &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;WeightTracker.xcworkspace&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;this project from now on.
+Sending stats
+Pod installation &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;! There are 2 dependencies from the Podfile and 7 total pods installed.
+REM-U223415L001-2:WeightTracker 223415&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+</description>
+        <pubDate>Sun, 24 Jul 2016 14:17:00 -0700</pubDate>
+        <link>http://biskilicious.github.io/mac/swift/ios/2016/07/24/Back-to-iOS-Development.html</link>
+        <guid isPermaLink="true">http://biskilicious.github.io/mac/swift/ios/2016/07/24/Back-to-iOS-Development.html</guid>
+        
+        
+        <category>Mac</category>
+        
+        <category>Swift</category>
+        
+        <category>iOS</category>
+        
+      </item>
     
       <item>
         <title>Configuring cx_Oracle for Python on Mac El Capitan</title>
@@ -150,6 +906,8 @@ Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span cl
 &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &#39;Hi, Tom&#39; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Hi Trevor&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 21 Jul 2016 14:23:09 -0700</pubDate>

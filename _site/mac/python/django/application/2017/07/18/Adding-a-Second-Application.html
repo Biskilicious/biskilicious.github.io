@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Welcome to Jekyll!</title>
-  <meta name="description" content="You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different wa...">
+  <title>Adding a Second Application in Django</title>
+  <meta name="description" content="This is where I think Django offers a lot more features and functionality. I want to add a registration application where users can Register for the site, th...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://biskilicious.github.io/jekyll/update/2016/07/21/welcome-to-jekyll.html">
+  <link rel="canonical" href="http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-a-Second-Application.html">
   <link rel="alternate" type="application/rss+xml" title="Place to Document Stuff" href="http://biskilicious.github.io/feed.xml">
 </head>
 
@@ -57,26 +57,61 @@
         <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title" itemprop="name headline">Welcome to Jekyll!</h1>
-    <p class="post-meta"><time datetime="2016-07-21T14:23:09-07:00" itemprop="datePublished">Jul 21, 2016</time></p>
+    <h1 class="post-title" itemprop="name headline">Adding a Second Application in Django</h1>
+    <p class="post-meta"><time datetime="2017-07-18T19:51:00-07:00" itemprop="datePublished">Jul 18, 2017</time></p>
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>You’ll find this post in your <code class="highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+    <p>This is where I think Django offers a lot more features and functionality. I want to add a registration application where users can Register for the site, then submit more information for adding an address and other pertinent information. This should then be usable to create an overall Application.</p>
 
-<p>To add new posts, simply add a file in the <code class="highlighter-rouge">_posts</code> directory that follows the convention <code class="highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+<p>I don’t want to make this overwhelmingly complicated, so I am going to create a simple user registration, then an Insurance Application applicaiton. There should be a module that allows me to create the registration, so let me read through the Django documentation and find out. BRB…</p>
 
-<p>Jekyll also offers powerful support for code snippets:</p>
+<p>So, let’s start with the registration portion first.</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
-<span class="k">end</span>
-<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
-<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+<p>Following the documentation on the Django website, and another tutorial someone was gracious enough to post, I have added a basic login and logout functionality by doing the following:</p>
 
-<p>Check out the <a href="http://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>
+<p>In settings.py, I added the following to the TEMPLATES param:</p>
 
-<p>Hi Trevor</p>
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">TEMPLATES <span class="o">=</span> <span class="o">[</span>
+    <span class="s1">'DIRS'</span>: <span class="o">[</span><span class="s1">'./CannaInsureRate/templates'</span>,],</code></pre></figure>
+
+<p>Then, I created those directories under the master site directory.</p>
+
+<p>I then added a template for each of login.html and logged_out.html, which are two default templates that Django looks for in those directories.</p>
+
+<p>Lastly, I want the login to redirect to the application I just build (rateapp), so I added the following line to the bottom of settings.py:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">LOGIN_REDIRECT_URL <span class="o">=</span> <span class="s1">'/rateapp/'</span></code></pre></figure>
+
+<p>In my login.html, I added the following basic login information:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">{% </span>block title %<span class="o">}</span>Login<span class="o">{</span>% endblock %<span class="o">}</span>
+
+<span class="gp">{% </span>block content %<span class="o">}</span>
+  &lt;h2&gt;Login&lt;/h2&gt;
+  &lt;form <span class="nv">method</span><span class="o">=</span><span class="s2">"post"</span>&gt;
+    <span class="o">{</span>% csrf_token %<span class="o">}</span>
+    <span class="o">{{</span> form.as_p <span class="o">}}</span>
+    &lt;button <span class="nb">type</span><span class="o">=</span><span class="s2">"submit"</span>&gt;Login&lt;/button&gt;
+  &lt;/form&gt;
+<span class="gp">{% </span>endblock %<span class="o">}</span></code></pre></figure>
+
+<p>And in the master project urls.py, I added the following:</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell">    url<span class="o">(</span>r<span class="s1">'^login/$'</span>, auth_views.login, <span class="nv">name</span><span class="o">=</span><span class="s1">'login'</span><span class="o">)</span>,
+    url<span class="o">(</span>r<span class="s1">'^logout/$'</span>, auth_views.logout, <span class="nv">name</span><span class="o">=</span><span class="s1">'logout'</span><span class="o">)</span>,</code></pre></figure>
+
+<p>Reloading the server renders the correct login form and redirects to the rateapp index page:</p>
+
+<p><img src="/assets/login_page.png" alt="Login Page" class="img-responsive" height="250px" /></p>
+
+<p>And after logging in…</p>
+
+<p><img src="/assets/after_login.png" alt="Login Page" class="img-responsive" height="125px" /></p>
+
+<p>I completed everything using the tutorial at this location. It was perfect. It provided working examples, explanations and most importantly, everything worked!</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication">Django Tutorial</a></p>
 
 
   </div>
