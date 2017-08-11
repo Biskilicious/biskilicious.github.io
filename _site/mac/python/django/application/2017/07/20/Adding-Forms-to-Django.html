@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Adding a Form to my Quote Application in Django</title>
-  <meta name="description" content="Here,">
+  <meta name="description" content="Now that everything is working from the admin screens, and I have a user view outside of the admin screen, I need a way to capture the user input as a quote ...">
 
   <link rel="stylesheet" href="/css/main.css">
   <link rel="canonical" href="http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Forms-to-Django.html">
@@ -62,7 +62,69 @@
   </header>
 
   <div class="post-content" itemprop="articleBody">
-    <p>Here,</p>
+    <p>Now that everything is working from the admin screens, and I have a user view outside of the admin screen, I need a way to capture the user input as a quote and return the quote_detail for that quote (i.e. the actual quote value). To do this, I know that I need a form for entering the quote from the front-end, so will be using Django’s form API to build that form.</p>
+
+<p>Once that is done, I will be furthering the authentication piece by creating a new group called ‘customers’ and authorize that quote form and quote detail to that group. Further, I want to make the quote_detail viewable only to the user that submitted the quote, so will be working on that today.</p>
+
+<p>First, the form:</p>
+
+<p>The form is relatively straight-forward, but does take some attention to detail to make sure nothing is missed.</p>
+
+<p>In models.py, I added the ModelForm for Quote:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">QuoteForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Quote</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">'business_type'</span><span class="p">,</span> <span class="s">'grow_operations'</span><span class="p">,</span> <span class="s">'percent_recreational'</span><span class="p">,</span> 
+        <span class="s">'separate_records'</span><span class="p">,</span> <span class="s">'maximum_plants'</span><span class="p">,</span> <span class="s">'testing_lab'</span><span class="p">,</span> <span class="s">'stream_of_commerce'</span><span class="p">]</span></code></pre></figure>
+
+<p>Then updated views.py to include a new method for managing the form post:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_quote</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">QuoteForm</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">'POST'</span><span class="p">:</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="n">QuoteForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">quote</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="n">quote</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s">'quote_detail'</span><span class="p">,</span> <span class="n">quote_id</span><span class="o">=</span><span class="n">quote</span><span class="o">.</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="n">QuoteForm</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s">'rateapp/quote_form.html'</span><span class="p">,</span> <span class="p">{</span><span class="s">'form'</span><span class="p">:</span> <span class="n">form</span><span class="p">})</span></code></pre></figure>
+
+<p>Next, I needed a HTML template to use for the form. Note the use of the as_table method for the form. Also, it wasn’t working until I wrapped the form call in &lt;table&gt; tags.</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+  {% csrf_token %}
+  <span class="nt">&lt;table&gt;</span>
+    {{ form.as_table }}
+  <span class="nt">&lt;/table&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Submit"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span></code></pre></figure>
+
+<p>Finally, I updated the URL to string it all together in urls.py:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">django.conf.urls</span> <span class="kn">import</span> <span class="n">url</span>
+<span class="kn">from</span> <span class="nn">rateapp</span> <span class="kn">import</span> <span class="n">views</span>
+
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r'^$'</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'index'</span><span class="p">),</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r'^quote_detail/(?P&lt;quote_id&gt;[0-9]+)/$'</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">quote_detail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'quote_detail'</span><span class="p">),</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r'^quote_request/$'</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">get_quote</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'quote_request'</span><span class="p">),</span>
+<span class="p">]</span></code></pre></figure>
+
+<p>After refreshing the browser (I don’t remember if I required a MakeMigrations for this, but on the safe side, assume it was done), I was able to see the form:</p>
+
+<p><img src="/assets/quote_request_form.png" alt="Quote Request Form" class="img-responsive" height="250px" /></p>
+
+<p>At this point, I was having some issues with the linking and the flow. I found that I misnamed quote_detail, I needed to use the refresh_from_db() to get the ID field from the quote and a few other little troubleshooting tasks, but once through those, it worked perfectly.</p>
+
+<p>I then added some URL tags to the templates so that I can move between the indx (the list of all quotes), the quote request form and the quote detail form as a user.</p>
+
+<p>Now that everything is working end-to-end, I want to set it up so that only authorized users can submit quotes. To do this, I need to work on the authorization piece of the application. Note, I have already completed the authorization piece of the application. Now I just need to add the logic so that 1) only admin groups can see all quotes, and 2) members of the customer group can only see THEIR quotes.</p>
+
+<p>Onto the next post!</p>
+
 
   </div>
 

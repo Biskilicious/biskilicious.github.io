@@ -205,12 +205,12 @@ def quoteDetail<span class="o">(</span>request, quote_id<span class="o">)</span>
 
 <p>I then added some basic information to that file:</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">&lt;h1&gt;<span class="o">{{</span> quote.business_type <span class="o">}}</span>&lt;/h1&gt;
-&lt;h1&gt;<span class="o">{{</span> quote.grow_operations <span class="o">}}</span>&lt;/h1&gt;</code></pre></figure>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">quote</span><span class="o">.</span><span class="n">business_type</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="p">{{</span> <span class="n">quote</span><span class="o">.</span><span class="n">grow_operations</span> <span class="p">}}</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span></code></pre></figure>
 
 <p>I then added a URL pattern for the new quoteDetail request:</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">    url<span class="o">(</span>r<span class="s1">'^(?P&lt;quote_id&gt;[0-9]+)/$'</span>, views.quoteDetail, <span class="nv">name</span><span class="o">=</span><span class="s1">'quoteDetail'</span><span class="o">)</span>,</code></pre></figure>
+<figure class="highlight"><pre><code class="language-python" data-lang="python">    <span class="n">url</span><span class="p">(</span><span class="s">r'^(?P&lt;quote_id&gt;[0-9]+)/$'</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">quoteDetail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'quoteDetail'</span><span class="p">),</span></code></pre></figure>
 
 <p>This will provide a list of quotes and the quote details to anyone that requests it. In the future, however, I want to make this an admin feature and only allow quotes to be viewed by the user that entered them. For that, I will have to change the query to render the quote based on the username, but I’ll get to that later. For now, this should be it to render the quoteDetail response.</p>
 

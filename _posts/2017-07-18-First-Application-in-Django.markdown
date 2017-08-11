@@ -172,7 +172,7 @@ I created the template by adding a new file in rateapp/templates/rateapp/quoteDe
 I then added some basic information to that file:
 
 
-{% highlight shell %}
+{% highlight python %}
 {% raw %}
 <h1>{{ quote.business_type }}</h1>
 <h1>{{ quote.grow_operations }}</h1>
@@ -181,7 +181,7 @@ I then added some basic information to that file:
 
 I then added a URL pattern for the new quoteDetail request:
 
-{% highlight shell %}
+{% highlight python %}
     url(r'^(?P<quote_id>[0-9]+)/$', views.quoteDetail, name='quoteDetail'),
 {% endhighlight %}
 
