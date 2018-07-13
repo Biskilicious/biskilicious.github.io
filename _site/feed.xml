@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Place to Document Stuff</title>
+    <title>The Startup Log</title>
     <description>A blog for me to post the knowledge, notes and other miscellaneous information accumulated in various projects and activities.</description>
-    <link>http://biskilicious.github.io/</link>
-    <atom:link href="http://biskilicious.github.io/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 24 Jul 2017 09:38:01 -0700</pubDate>
-    <lastBuildDate>Mon, 24 Jul 2017 09:38:01 -0700</lastBuildDate>
-    <generator>Jekyll v3.1.6</generator>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 11 Jul 2018 14:48:56 -0700</pubDate>
+    <lastBuildDate>Wed, 11 Jul 2018 14:48:56 -0700</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>Starting Over - Developing a new Platform in Django</title>
+        <description>&lt;p&gt;In light of a recent layoff, I have decided to pursue the dream of starting my own startup company. So, what originally started as a resource to capture some project work that I had completed, I will now use this as a development diary for maintaining a log of the development steps that I have taken.&lt;/p&gt;
+
+&lt;p&gt;I have already worked through the various steps of installing and configuring Django, as well as configuring Django for login, registration and a few other tasks. So, picking up from there, I will focus on some activities like getting Django authentication working against Google, Facebook, Twitter, etc.&lt;/p&gt;
+
+&lt;p&gt;Last Year, I started an application aimed at providing Cannabis businesses an opportunity to get an insurance quote online by providing their information to the app. This seems pretty straightforward, but between rating policies and all of the factors that go into an insurance platform, it proved to be quite difficult. Instead of focusing on a single niche, cannabis, for the platform, I am going to start over and build the platform so that other niches can be integrated without major rework. This intent of this post is to try to explain the dynamics of the new platform.&lt;/p&gt;
+
+&lt;p&gt;I am choosing Django because it is the most familiar to me. My goal is to build a platform that I can begin to use, but recognize that it will require rebuilding and retooling in order to scale. The intent is to build something that I can use to make revenue in order to hire the development team to help cross that bridge when it comes.&lt;/p&gt;
+
+&lt;p&gt;In current insurance models, especially for those of the niche markets, the prospective customer searches the internet for insurance providers who offer the type of insurance in which they are searching. When they find the one or two providers, they are given the option to complete a form, which is then emailed to the insurance agent, or they pick up the phone and call the agent. The issue is that the sites of these agents will indicate that they offer an online quote, but the quote is really to fill out a form, which is then emailed to the agent, who calls the prospect with the quote.&lt;/p&gt;
+
+&lt;p&gt;This platform will be different in that the prospect will fill out a questionnaire and receive a “ballpark” quote. If they choose to continue, they will be presented with an extended questionnaire that will be used as the basis to complete the application(s). The applications are unique and custom for each of the downstream carriers, therefore, the data will be stored and each carrier for each niche will have a template that is specific to their custom application. I don’t see a way around this customization, but these don’t usually change frequently, so it should be ok. As the proposals are returned to the agent, they information is fed into the system for each application. After all of the proposals from the carriers are received, the platform will email the customer, directing them to the platform where each carriers’ limits and costs will be displayed. Finally, the customer will be able to select a proposal and purchase the policy online, which will trigger an email to the agent and carrier informing them of them purchase and binding the customer.&lt;/p&gt;
+
+&lt;p&gt;Next phases will be to allow for the download of policy documents, certificates of insurance, submitting and processing claims, renewals, and other aspects of the business of insurance.&lt;/p&gt;
+
+&lt;p&gt;This is a lean startup, in that I am programming this myself and will bring the application to a level where we can start selling policies. Once revenue comes in from the policies, I will reinvest that revenue to enhance the application and add the above features. The ultimate goal is to provide a 100% customer operated insurance application, where the role of the agent is to guide and monitor (which can be done at any time and from anywhere!).&lt;/p&gt;
+
+&lt;p&gt;As of now, I have built the first iteration of the platform with the ability to capture the questionnaire, generate the quote, generate the proposal, complete the questionnaire, and fill in the Word Document version of one of the carrier’s applications. I was recently successful in using Django to populate the PDF versions, but this method is a HUGE hassle. I am going to try a different approach, where I render the application in HTML for review, and if it is good, convert it to a PDF document that is not a form…just a PDF.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 11 Jul 2018 13:16:00 -0700</pubDate>
+        <link>http://localhost:4000/startup/Starting-Over/</link>
+        <guid isPermaLink="true">http://localhost:4000/startup/Starting-Over/</guid>
+        
+        
+        <category>Startup</category>
+        
+      </item>
     
       <item>
         <title>Adding Authorization to Forms and Views in Django</title>
@@ -20,13 +49,13 @@
 &lt;p&gt;In views.py:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;Customers&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Customers'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;requestor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quotes_list&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;rateapp/index.html&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quotes_list'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'rateapp/index.html'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This test checks whether the group ‘Customers’ is present in the list of gruops that this user belongs to.&lt;/p&gt;
 
@@ -41,43 +70,43 @@
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_quotes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basicConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sys&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stderr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_authenticated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;Customers&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'Customers'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exists&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;requestor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;all&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;/accounts/login/&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'/accounts/login/'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quotes_list&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;rateapp/index.html&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quotes_list'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quotes_list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'rateapp/index.html'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;After a minor change in urls.py to the new view method, I was good to go. If the user is NOT authenticated, it will redirect the user to the login page. If the user IS authenticated, it will perform the test on whether they are a customer or not.&lt;/p&gt;
 
 &lt;p&gt;Now that that piece is in place, I wanted a home page that was for the master site, and not any particular application. I created a new project called “home” using:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py startapp home&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py startapp home&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This created the familiar application in my root cannainsurerate application. Now that I think about it, I may change this name to just “CannabisInsurance” and the rateapp to just “quotes”. This will make the URL more recognizable to customers and easier to track. But, I will do that in a bit.&lt;/p&gt;
 
 &lt;p&gt;Once the home application was created, I just needed to register the application in settings.py:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;home.apps.HomeConfig&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;customer.apps.CustomerConfig&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;rateapp.apps.RateappConfig&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;django.contrib.admin&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;django.contrib.auth&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;django.contrib.contenttypes&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;django.contrib.sessions&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;django.contrib.messages&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s&quot;&gt;&#39;django.contrib.staticfiles&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'home.apps.HomeConfig'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'customer.apps.CustomerConfig'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'rateapp.apps.RateappConfig'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'django.contrib.admin'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'django.contrib.auth'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'django.contrib.contenttypes'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'django.contrib.sessions'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'django.contrib.messages'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;'django.contrib.staticfiles'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Then, update the urls.py to point to the new home application.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;n&quot;&gt;urlpatterns&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r&#39;^&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;home.urls&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r'^'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;include&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'home.urls'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)),&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;And, within home/urls.py, I added the URL to point to the index file that I wanted to render in my display:&lt;/p&gt;
@@ -86,7 +115,7 @@
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;home&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;urlpatterns&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r&#39;^$&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;index&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r'^$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'index'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;In home/views.py, I need logic to redirect the user to an index page, which will include a template that I will create in the next step:&lt;/p&gt;
@@ -94,7 +123,7 @@
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;django.shortcuts&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;home/index.html&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'home/index.html'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Now, when a user comes to the main site, which, for now, is 127.0.0.1:8001, they will be redirected to 127.0.0.1:8001/home/ and I have a template for processing Django actions, including linking to the other applications (such as creating a quote, registering, logging in, or submitting an application).&lt;/p&gt;
 
@@ -119,17 +148,11 @@
 
 </description>
         <pubDate>Thu, 20 Jul 2017 13:23:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Authorization-to-Django.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Authorization-to-Django.html</guid>
+        <link>http://localhost:4000/development/Adding-Authorization-to-Django/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Adding-Authorization-to-Django/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Application</category>
+        <category>development</category>
         
       </item>
     
@@ -148,22 +171,22 @@
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;QuoteForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ModelForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Meta&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;fields&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;business_type&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;grow_operations&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;percent_recreational&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
-        &lt;span class=&quot;s&quot;&gt;&#39;separate_records&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;maximum_plants&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;testing_lab&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;stream_of_commerce&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+        &lt;span class=&quot;n&quot;&gt;fields&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'business_type'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'grow_operations'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'percent_recreational'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+        &lt;span class=&quot;s&quot;&gt;'separate_records'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'maximum_plants'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'testing_lab'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'stream_of_commerce'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Then updated views.py to include a new method for managing the form post:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;get_quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuoteForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;POST&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;method&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'POST'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuoteForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;POST&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;is_valid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;save&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;refresh_from_db&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quote_detail&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quote_detail'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
             &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;QuoteForm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;rateapp/quote_form.html&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;form&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;render&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'rateapp/quote_form.html'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'form'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Next, I needed a HTML template to use for the form. Note the use of the as_table method for the form. Also, it wasn’t working until I wrapped the form call in &amp;lt;table&amp;gt; tags.&lt;/p&gt;
 
@@ -181,9 +204,9 @@
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;rateapp&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;
 
 &lt;span class=&quot;n&quot;&gt;urlpatterns&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r&#39;^$&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;index&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r&#39;^quote_detail/(?P&amp;lt;quote_id&amp;gt;[0-9]+)/$&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote_detail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quote_detail&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r&#39;^quote_request/$&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quote_request&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r'^$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'index'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r'^quote_detail/(?P&amp;lt;quote_id&amp;gt;[0-9]+)/$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote_detail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quote_detail'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r'^quote_request/$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quote_request'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;After refreshing the browser (I don’t remember if I required a MakeMigrations for this, but on the safe side, assume it was done), I was able to see the form:&lt;/p&gt;
@@ -200,17 +223,11 @@
 
 </description>
         <pubDate>Thu, 20 Jul 2017 10:29:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Forms-to-Django.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/20/Adding-Forms-to-Django.html</guid>
+        <link>http://localhost:4000/development/Adding-Forms-to-Django/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Adding-Forms-to-Django/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Application</category>
+        <category>development</category>
         
       </item>
     
@@ -239,27 +256,27 @@
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getFarmQuote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
     &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quote_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;growRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;grow_operations&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grow_operations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;growRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'grow_operations'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;grow_operations&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
     &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;percent_recreational&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;percent_recreational&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;percent&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'percent_recreational'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'percent'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;percent_recreational&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt;
 
-    &lt;span class=&quot;n&quot;&gt;sepRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;separate_records&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;separate_records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;sepRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'separate_records'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;separate_records&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
     &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maximum_plants&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;maximum_plants&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;plant&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'maximum_plants'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'plant'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
         &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maximum_plants&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt;
 
     &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing_lab&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;testing_lab&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing_lab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'testing_lab'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing_lab&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
     &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream_of_commerce&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;stream_of_commerce&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream_of_commerce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;getRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'stream_of_commerce'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stream_of_commerce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
     &lt;span class=&quot;n&quot;&gt;quote&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;growRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;recRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sepRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plantRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;labRate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;commerceRate&lt;/span&gt;
 
@@ -297,7 +314,7 @@
 &lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;.models&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FarmRate&lt;/span&gt;
 
 &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FarmRateAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ModelAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;list_display&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quote_parameter&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;parameter_name&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&#39;parameter_value&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;list_display&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quote_parameter'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'parameter_name'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'parameter_value'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 
 
 &lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Quote&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;site&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FarmRate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FarmRateAdmin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -309,17 +326,11 @@
 &lt;p&gt;On to the next exercise!&lt;/p&gt;
 </description>
         <pubDate>Thu, 20 Jul 2017 09:56:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/20/Django-Admin-and-Rates.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/20/Django-Admin-and-Rates.html</guid>
+        <link>http://localhost:4000/development/Django-Admin-and-Rates/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Django-Admin-and-Rates/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Application</category>
+        <category>development</category>
         
       </item>
     
@@ -336,7 +347,7 @@
 &lt;p&gt;In settings.py, I added the following to the TEMPLATES param:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;TEMPLATES &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;&#39;DIRS&#39;&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;./CannaInsureRate/templates&#39;&lt;/span&gt;,],&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;s1&quot;&gt;'DIRS'&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'./CannaInsureRate/templates'&lt;/span&gt;,],&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Then, I created those directories under the master site directory.&lt;/p&gt;
 
@@ -344,25 +355,25 @@
 
 &lt;p&gt;Lastly, I want the login to redirect to the application I just build (rateapp), so I added the following line to the bottom of settings.py:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;LOGIN_REDIRECT_URL &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;/rateapp/&#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;LOGIN_REDIRECT_URL &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/rateapp/'&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;In my login.html, I added the following basic login information:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;block title %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;Login&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endblock %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% block title %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;Login&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endblock %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
 
-&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;block content %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% block content %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
   &amp;lt;h2&amp;gt;Login&amp;lt;/h2&amp;gt;
-  &amp;lt;form &lt;span class=&quot;nv&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;post&quot;&lt;/span&gt;&amp;gt;
+  &amp;lt;form &lt;span class=&quot;nv&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;post&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% csrf_token %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
     &lt;span class=&quot;o&quot;&gt;{{&lt;/span&gt; form.as_p &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;
-    &amp;lt;button &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;submit&quot;&lt;/span&gt;&amp;gt;Login&amp;lt;/button&amp;gt;
+    &amp;lt;button &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;submit&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;Login&amp;lt;/button&amp;gt;
   &amp;lt;/form&amp;gt;
-&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;endblock %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endblock %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;And in the master project urls.py, I added the following:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;&#39;^login/$&#39;&lt;/span&gt;, auth_views.login, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;login&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
-    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;&#39;^logout/$&#39;&lt;/span&gt;, auth_views.logout, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;logout&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;'^login/$'&lt;/span&gt;, auth_views.login, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'login'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+    url&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;r&lt;span class=&quot;s1&quot;&gt;'^logout/$'&lt;/span&gt;, auth_views.logout, &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'logout'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Reloading the server renders the correct login form and redirects to the rateapp index page:&lt;/p&gt;
 
@@ -378,17 +389,11 @@
 
 </description>
         <pubDate>Tue, 18 Jul 2017 19:51:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-a-Second-Application.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-a-Second-Application.html</guid>
+        <link>http://localhost:4000/development/Adding-a-Second-Application/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Adding-a-Second-Application/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Application</category>
+        <category>development</category>
         
       </item>
     
@@ -409,15 +414,15 @@ class FarmRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;models.Model&lt;span
 
 &lt;p&gt;Then enable that new object in my Admin screen (since it is a new model, I need to run a makemigrations command):&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py makemigrations rateapp
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py makemigrations rateapp
 
-Migrations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;rateapp&#39;&lt;/span&gt;:
+Migrations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rateapp'&lt;/span&gt;:
   rateapp/migrations/0002_auto_20170718_2258.py
     - Create model FarmRate
     - Alter field business_type on quote
     - Alter field grow_operations on quote
 
-&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, rateapp, sessions
 Running migrations:
@@ -459,7 +464,7 @@ def getFarmQuote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;quote_id&lt;span c
 
 def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
     quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; getFarmQuote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;&#39;rateapp/quoteDetail.html&#39;&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quote&#39;&lt;/span&gt;: quote&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;'rateapp/quoteDetail.html'&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'quote'&lt;/span&gt;: quote&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Now, refreshing the browser, I get the quote details returned from the service module instead of directly from the database model. Perfect! Now I just need to match up the rate values with the quote input parameters.&lt;/p&gt;
 
@@ -471,7 +476,7 @@ def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&l
 
 def getFarmQuote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
     quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Quote.objects.get&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    quote.rate &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; getRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;grow_operations&#39;&lt;/span&gt;, quote.grow_operations&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+    quote.rate &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; getRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'grow_operations'&lt;/span&gt;, quote.grow_operations&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;quote
 
 def getRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;param, paramType&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
@@ -500,17 +505,11 @@ def getRate&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;param, paramType&lt;spa
 &lt;p&gt;Let’s start a new post for that one!&lt;/p&gt;
 </description>
         <pubDate>Tue, 18 Jul 2017 16:03:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-Business-Logic.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/18/Adding-Business-Logic.html</guid>
+        <link>http://localhost:4000/development/Adding-Business-Logic/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Adding-Business-Logic/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Application</category>
+        <category>development</category>
         
       </item>
     
@@ -533,28 +532,28 @@ class Quote&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;models.Model&lt;span cl
 &lt;p&gt;I need to add the rateapp to the master site as follows in CannaInsureRate/settings.py:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;INSTALLED_APPS &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;s1&quot;&gt;&#39;rateapp.apps.RateappConfig&#39;&lt;/span&gt;,
-    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.admin&#39;&lt;/span&gt;,
-    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.auth&#39;&lt;/span&gt;,
-    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.contenttypes&#39;&lt;/span&gt;,
-    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.sessions&#39;&lt;/span&gt;,
-    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.messages&#39;&lt;/span&gt;,
-    &lt;span class=&quot;s1&quot;&gt;&#39;django.contrib.staticfiles&#39;&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'rateapp.apps.RateappConfig'&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'django.contrib.admin'&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'django.contrib.auth'&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'django.contrib.contenttypes'&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'django.contrib.sessions'&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'django.contrib.messages'&lt;/span&gt;,
+    &lt;span class=&quot;s1&quot;&gt;'django.contrib.staticfiles'&lt;/span&gt;,
 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;I verified that the rateapp is present in the rateapp/apps.py file.&lt;/p&gt;
 
 &lt;p&gt;Next, I need to build the initial objects for creating the objects in the database:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py makemigrations rateapp
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py makemigrations rateapp
 
-Migrations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;rateapp&#39;&lt;/span&gt;:
+Migrations &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rateapp'&lt;/span&gt;:
   rateapp/migrations/0001_initial.py
     - Create model Quote&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Finally, I need to build the objects in the database. Again, at this point, I am using sqlite, the default database in Django, but will be switching to PostreSQL once the framework has been laid.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py migrate
 
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, rateapp, sessions
@@ -582,9 +581,9 @@ admin.site.register&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Quote&lt;span c
 
 &lt;p&gt;Next, I want to restrict the choices for each of these parameters to include only those that I am currently accepting by adding choices to each of the fields, which Django will render as pulldonwn menus:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    FARM &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Farm&#39;&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;    FARM &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Farm'&lt;/span&gt;
     BUSINESS_TYPE_CHOICES &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;FARM, &lt;span class=&quot;s1&quot;&gt;&#39;Farm&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;FARM, &lt;span class=&quot;s1&quot;&gt;'Farm'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
     &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
     business_type &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
         &lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;20,
@@ -592,14 +591,14 @@ admin.site.register&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Quote&lt;span c
         &lt;span class=&quot;nv&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;FARM
     &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 
-    OUTDOOR &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Outdoor&#39;&lt;/span&gt;
-    INDOOR &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Indoor&#39;&lt;/span&gt;
-    GREENHOUSE &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;Greenhouse&#39;&lt;/span&gt;
+    OUTDOOR &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Outdoor'&lt;/span&gt;
+    INDOOR &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Indoor'&lt;/span&gt;
+    GREENHOUSE &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Greenhouse'&lt;/span&gt;
 
     OPERATION_TYPE_CHOICES &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;OUTDOOR, &lt;span class=&quot;s1&quot;&gt;&#39;Outdoor&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
-        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;INDOOR, &lt;span class=&quot;s1&quot;&gt;&#39;Indoor&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
-        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;GREENHOUSE, &lt;span class=&quot;s1&quot;&gt;&#39;Greenhouse&#39;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;OUTDOOR, &lt;span class=&quot;s1&quot;&gt;'Outdoor'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;INDOOR, &lt;span class=&quot;s1&quot;&gt;'Indoor'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
+        &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;GREENHOUSE, &lt;span class=&quot;s1&quot;&gt;'Greenhouse'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,
     &lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
     grow_operations &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; models.CharField&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
         &lt;span class=&quot;nv&quot;&gt;max_length&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;10,
@@ -616,22 +615,22 @@ from .models import Quote
 
 def index&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
     quotes_list &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; Quote.objects.all&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
-    context &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quotes_list&#39;&lt;/span&gt;: quotes_list&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;&#39;rateapp/index.html&#39;&lt;/span&gt;, context&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    context &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'quotes_list'&lt;/span&gt;: quotes_list&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;'rateapp/index.html'&lt;/span&gt;, context&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Then, create rateapp/templates/rateapp/index.html&lt;/p&gt;
 
 &lt;p&gt;Then, within that new template, add the following:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;quotes_list %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% &lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;quotes_list %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
     &amp;lt;ul&amp;gt;
     &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;quote &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;quotes_list %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-        &amp;lt;li&amp;gt;&amp;lt;a &lt;span class=&quot;nv&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/rateapp/{{ quote.id }}/&quot;&lt;/span&gt;&amp;gt;&lt;span class=&quot;o&quot;&gt;{{&lt;/span&gt; quote.business_type &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
+        &amp;lt;li&amp;gt;&amp;lt;a &lt;span class=&quot;nv&quot;&gt;href&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/rateapp/{{ quote.id }}/&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;{{&lt;/span&gt; quote.business_type &lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;&amp;lt;/a&amp;gt;&amp;lt;/li&amp;gt;
     &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endfor %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
     &amp;lt;/ul&amp;gt;
-&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
     &amp;lt;p&amp;gt;No quotes are available.&amp;lt;/p&amp;gt;
-&lt;span class=&quot;gp&quot;&gt;{% &lt;/span&gt;endif %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;% endif %&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Rebooting the server (the application didn’t auto-refresh to include the Quote list), I can now see the single record I entered in the Admin section.&lt;/p&gt;
 
@@ -647,7 +646,7 @@ def index&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request&lt;span class=&qu
 
 def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;:
     quote &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; get_object_or_404&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Quote, &lt;span class=&quot;nv&quot;&gt;pk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;quote_id&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;&#39;rateapp/quoteDetail.html&#39;&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&#39;quote&#39;&lt;/span&gt;: quote&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;render&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, &lt;span class=&quot;s1&quot;&gt;'rateapp/quoteDetail.html'&lt;/span&gt;, &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'quote'&lt;/span&gt;: quote&lt;span class=&quot;o&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Now, reloading the page will return a 404 Not Found error, which will be replaced with an actual page in the future.&lt;/p&gt;
 
@@ -664,7 +663,7 @@ def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&l
 
 &lt;p&gt;I then added a URL pattern for the new quoteDetail request:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r&#39;^(?P&amp;lt;quote_id&amp;gt;[0-9]+)/$&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quoteDetail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;quoteDetail&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;    &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;r'^(?P&amp;lt;quote_id&amp;gt;[0-9]+)/$'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;views&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;quoteDetail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'quoteDetail'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This will provide a list of quotes and the quote details to anyone that requests it. In the future, however, I want to make this an admin feature and only allow quotes to be viewed by the user that entered them. For that, I will have to change the query to render the quote based on the username, but I’ll get to that later. For now, this should be it to render the quoteDetail response.&lt;/p&gt;
 
@@ -677,17 +676,11 @@ def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&l
 &lt;p&gt;I’ll start that in the next post.&lt;/p&gt;
 </description>
         <pubDate>Tue, 18 Jul 2017 12:31:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/application/2017/07/18/First-Application-in-Django.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/application/2017/07/18/First-Application-in-Django.html</guid>
+        <link>http://localhost:4000/development/First-Application-in-Django/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/First-Application-in-Django/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Application</category>
+        <category>development</category>
         
       </item>
     
@@ -697,7 +690,7 @@ def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&l
 
 &lt;p&gt;Here, we need to create a new site, which will be the master site for all of the subapplications that I intend to build during this project. Since CannaSure is taken by the parent company, I will name it CannaInsureRate.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;django-admin startproject CannaInsureRate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;django-admin startproject CannaInsureRate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;My Directory now looks like this:&lt;/p&gt;
 
@@ -711,19 +704,19 @@ def quoteDetail&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;request, quote_id&l
 
 &lt;p&gt;Once this is complete, I should be able to test the installation and get Django to return a page:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py runserver&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py runserver&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;And I get the following output:&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;Performing system checks...
 
-System check identified no issues &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 silenced&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.
+System check identified no issues &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 silenced&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 
-You have 13 unapplied migration&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;. Your project may not work properly &lt;span class=&quot;k&quot;&gt;until &lt;/span&gt;you apply the migrations &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;app&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: admin, auth, contenttypes, sessions.
-Run &lt;span class=&quot;s1&quot;&gt;&#39;python manage.py migrate&#39;&lt;/span&gt; to apply them.
+You have 13 unapplied migration&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; Your project may not work properly &lt;span class=&quot;k&quot;&gt;until &lt;/span&gt;you apply the migrations &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;app&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;s&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: admin, auth, contenttypes, sessions.
+Run &lt;span class=&quot;s1&quot;&gt;'python manage.py migrate'&lt;/span&gt; to apply them.
 
 July 18, 2017 - 15:15:18
-Django version 1.11.3, using settings &lt;span class=&quot;s1&quot;&gt;&#39;CannaInsureRate.settings&#39;&lt;/span&gt;
+Django version 1.11.3, using settings &lt;span class=&quot;s1&quot;&gt;'CannaInsureRate.settings'&lt;/span&gt;
 Starting development server at http://127.0.0.1:8001/
 Quit the server with CONTROL-C.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
@@ -740,7 +733,7 @@ Quit the server with CONTROL-C.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;The first and most important application to get started is a simple farm rating application for property and general liability. This should accept as few as possible input parameters, process these then return a rate. So, let’s call this first one rateapp.&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py startapp rateapp&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py startapp rateapp&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;This command generated the following on the filesystem:&lt;/p&gt;
 
@@ -768,11 +761,11 @@ Quit the server with CONTROL-C.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Before I start anything, I have a pesky warning message that keeps popping up indicating that I have not created my migrations in the database. So, to remove the warning, I need to run the migrate command:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py migrate&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Which returns:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py migrate
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py migrate
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions
 Running migrations:
@@ -792,19 +785,19 @@ Running migrations:
 
 &lt;p&gt;Now, restarting the server, I have a ‘clean’ start:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py runserver 8001
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py runserver 8001
 
 Performing system checks...
 
-System check identified no issues &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 silenced&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.
+System check identified no issues &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0 silenced&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
 July 18, 2017 - 16:40:43
-Django version 1.11.3, using settings &lt;span class=&quot;s1&quot;&gt;&#39;CannaInsureRate.settings&#39;&lt;/span&gt;
+Django version 1.11.3, using settings &lt;span class=&quot;s1&quot;&gt;'CannaInsureRate.settings'&lt;/span&gt;
 Starting development server at http://127.0.0.1:8001/
 Quit the server with CONTROL-C.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Now that the first request/response has been created for the rateapp application and have migrated the objects to the database, I can create the superuser:&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;python manage.py createsuperuser --username&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rbdundas --email&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rbdundas@gmail.com
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python manage.py createsuperuser &lt;span class=&quot;nt&quot;&gt;--username&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rbdundas &lt;span class=&quot;nt&quot;&gt;--email&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;rbdundas@gmail.com
 Password: 
 Password &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;again&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: 
 Superuser created successfully.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
@@ -823,17 +816,11 @@ Superuser created successfully.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
         <pubDate>Mon, 17 Jul 2017 21:03:09 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/configuration/2017/07/17/Configuring-Django-for-New-Project.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/configuration/2017/07/17/Configuring-Django-for-New-Project.html</guid>
+        <link>http://localhost:4000/development/Configuring-Django-for-New-Project/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Configuring-Django-for-New-Project/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
-        
-        <category>Configuration</category>
+        <category>development</category>
         
       </item>
     
@@ -857,18 +844,18 @@ Superuser created successfully.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 Python 3.6.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;v3.6.0:41df79263a11, Dec 22 2016, 17:23:13&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 
 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;GCC 4.2.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Apple Inc. build 5666&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;dot 3&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt; on darwin
 Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;copyright&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;credits&quot;&lt;/span&gt; or &lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.
-&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;import django
-&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;django.get_version&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; import django
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;django.get_version&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
 1.10.6
-&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;I checked the official released version of Django and can see that it is now at version 1.11.0; therefore, I am going to go ahead and update it. I am not planning to update Python at this time, even though it is at 3.6.2.&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip update django
 ERROR: unknown &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;update&quot;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pippip install -U django
--bash: pippip: &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;not found
-&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip install -U django
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pippip install &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; django
+&lt;span class=&quot;nt&quot;&gt;-bash&lt;/span&gt;: pippip: &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;not found
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;projectsenv&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; rbdundas:projects rbdundas&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip install &lt;span class=&quot;nt&quot;&gt;-U&lt;/span&gt; django
 Collecting django
   Downloading Django-1.11.3-py2.py3-none-any.whl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6.9MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
     100% |████████████████████████████████| 7.0MB 211kB/s 
@@ -888,24 +875,20 @@ Successfully installed django-1.11.3 pytz-2017.2
 Python 3.6.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;v3.6.0:41df79263a11, Dec 22 2016, 17:23:13&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 
 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;GCC 4.2.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Apple Inc. build 5666&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;dot 3&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt; on darwin
 Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;copyright&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;credits&quot;&lt;/span&gt; or &lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.
-&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;import django
-&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;django.get_version&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; import django
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; print&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;django.get_version&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt;
 1.11.3
-&lt;span class=&quot;gp&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;Now that Django has been installed and tested, I will move on to configuration and configuration of the project.&lt;/p&gt;
 
 </description>
         <pubDate>Mon, 17 Jul 2017 18:03:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/django/2017/07/17/Setting-Up-Django.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/django/2017/07/17/Setting-Up-Django.html</guid>
+        <link>http://localhost:4000/development/Setting-Up-Django/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Setting-Up-Django/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Django</category>
+        <category>development</category>
         
       </item>
     
@@ -932,148 +915,18 @@ Installing GoogleUtilities &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.3.1&l
 Generating Pods project
 Integrating client project
 
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;!] Please close any current Xcode sessions and use &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;WeightTracker.xcworkspace&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;this project from now on.
+&lt;span class=&quot;o&quot;&gt;[!]&lt;/span&gt; Please close any current Xcode sessions and use &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;WeightTracker.xcworkspace&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;this project from now on.
 Sending stats
-Pod installation &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;! There are 2 dependencies from the Podfile and 7 total pods installed.
+Pod installation &lt;span class=&quot;nb&quot;&gt;complete&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; There are 2 dependencies from the Podfile and 7 total pods installed.
 REM-U223415L001-2:WeightTracker 223415&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
         <pubDate>Sun, 24 Jul 2016 14:17:00 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/swift/ios/2016/07/24/Back-to-iOS-Development.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/swift/ios/2016/07/24/Back-to-iOS-Development.html</guid>
+        <link>http://localhost:4000/development/Back-to-iOS-Development/</link>
+        <guid isPermaLink="true">http://localhost:4000/development/Back-to-iOS-Development/</guid>
         
         
-        <category>Mac</category>
-        
-        <category>Swift</category>
-        
-        <category>iOS</category>
-        
-      </item>
-    
-      <item>
-        <title>Configuring cx_Oracle for Python on Mac El Capitan</title>
-        <description>&lt;p&gt;It took me  along time to configure Oracle Instant Client on my Macbook.  I spent abut 6 hours reading through various blog posts and other recommendations on the web that took me down several different rabbit holes. I wanted to take a minute to document the steps in the event that someone else experiences the same types of issues that I had.&lt;/p&gt;
-
-&lt;p&gt;I am running OS X El Capitan 10.11.5 on a Macbook Pro.  I want to connect to remote databases within a firewalled network using the databases that I have configured in my tnsnames.ora file.&lt;/p&gt;
-
-&lt;p&gt;First, download the Instant Client packages from the Oracle site (you will need to register and accept the EULA to download):
-&lt;a href=&quot;http://www.oracle.com/technetwork/topics/intel-macsoft-096467.html&quot;&gt;Oracle Instant Client&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Remember to chose the 64-bit versions or cx_Oracle will fail to compile.&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;instantclient-basic-macos.x64-12.1.0.2.0.zip&lt;/li&gt;
-  &lt;li&gt;instantclient-sqlplus-macos.x64-12.1.0.2.0.zip&lt;/li&gt;
-  &lt;li&gt;instantclient-sdk-macos.x64-12.1.0.2.0.zip&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;From the Downloads directory, unzip each file:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;unzip instantclient-basic-macos.x64-12.1.0.2.0.zip
-unzip instantclient-sqlplus-macos.x64-12.1.0.2.0.zip
-unzip instantclient-sdk-macos.x64-12.1.0.2.0.zip&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Using the unzip tool at the command line will unzip all of the files into a single working directory “instantclient_12_1”.&lt;/p&gt;
-
-&lt;p&gt;Next, move that directory out of the Downloads directory to the location that will ultimately be $ORACLE_HOME. Although there are sites that direct you to install the client in the /opt or /usr directory, I didn’t want to install it there.  I prefer to install this in my own /User directory so that I can more easily clone my directory from machine to machine, which I have named “oracleclient”.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;mv instantclient_12_1 ~/oracleclient&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Create a lib directory and move the dylib files into it:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/oracleclient
-mkdir lib
-mv &lt;span class=&quot;s2&quot;&gt;&quot;*.dylib*&quot;&lt;/span&gt; lib
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;lib&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;There are a few soft links that had to be created:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;ln -s libclntsh.dylib.12.1 libclntsh.dylib
-ln -s libocci.dylib.12.1 libocci.dylib&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Back out of lib and create the directory structure for tnsnames.ora. I have this file already from work, so am copying it into the directory. You may have to create one of your own, which I will leave you to Google for syntax.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ..
-mkdir network
-mkdir network/admin
-cp ~/Downloads/tnsname.ora network/admin/tnsnames.ora&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Set the environment variables and reload your shell.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;vi ~/.bash_profile
-&lt;span class=&quot;c&quot;&gt;#insert the following&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ORACLE_HOME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/oracleclient
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DYLD_LIBRARY_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ORACLE_HOME&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ORACLE_HOME&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Exit out of vi and execute the .bash_profile or load a new terminal.&lt;/p&gt;
-
-&lt;p&gt;Test to be sure you can access your database via SQLPLus:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sqlplus scott/tiger@oracle
-
-
-SQL&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;Plus: Release 12.1.0.2.0 Production on Thu Jul 21 15:46:07 2016
-
-Copyright &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 1982, 2016, Oracle.  All rights reserved.
-
-
-Connected to:
-Oracle Database 11g Enterprise Edition Release 11.2.0.4.0 - 64bit Production
-With the Partitioning, Real Application Clusters, Automatic Storage Management, OLAP,
-Data Mining and Real Application Testing options
-
-SQL&amp;gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;With that successful test, you can switch your attention to Python.  I tried a lot of different methods, but the steps documented at this location were the steps that actually got it to work:&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://gist.github.com/thom-nic/6011715&quot;&gt;thom-nic GitHub page&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;I kept receiving errors related to libclntsh.dylib.12.1 while using PIP so chose the source path instead.&lt;/p&gt;
-
-&lt;p&gt;I downloaded the source from the Python packages site: &lt;a href=&quot;https://pypi.python.org/pypi/cx_Oracle/5.2.1&quot;&gt;PyPi&lt;/a&gt;.  Get the full URL from that site, as it will have changed by the time you are downloading it.&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -O https://pypi.python.org/packages/95/7f/3b74fe3adeb5948187b760330cb7e9175e3484bd6defdfeb9b504d71b4b3/cx_Oracle-5.2.1.tar.gz
-tar -xvf cx_Oracle-5.2.1.tar.gz
-&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;cx_Oracle-5.2.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;After MANY installation attempts and several blog posts later, THIS is the step that ultimately proved successful:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;env &lt;span class=&quot;nv&quot;&gt;ARCHFLAGS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;-arch x86_64&quot;&lt;/span&gt; python setup.py build
-sudo python setup.py install&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Setting the ARCHFLAGS variable overrides a security exception set in Macs for passing 32-bit libraries across sudo (please don’t quote me on this one!).&lt;/p&gt;
-
-&lt;p&gt;Once the build and install were successful, I could test cx_Oracle:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;REM-U223415L001-2:~ 223415&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python
-Python 2.7.10 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default, Oct 23 2015, 19:19:21&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;GCC 4.2.1 Compatible Apple LLVM 7.0.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;clang-700.0.59.5&lt;span class=&quot;o&quot;&gt;)]&lt;/span&gt; on darwin
-Type &lt;span class=&quot;s2&quot;&gt;&quot;help&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;copyright&quot;&lt;/span&gt;, &lt;span class=&quot;s2&quot;&gt;&quot;credits&quot;&lt;/span&gt; or &lt;span class=&quot;s2&quot;&gt;&quot;license&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more information.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;cx_Oracle&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cx_Oracle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;connect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&#39;scott/tiger@oracle&#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;version&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;&#39;11.2.0.4.0&#39;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;con&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;And, now I’m ready to go!&lt;/p&gt;
-
-</description>
-        <pubDate>Thu, 21 Jul 2016 15:03:09 -0700</pubDate>
-        <link>http://biskilicious.github.io/mac/python/oracle/cx_oracle/2016/07/21/cx_Oracle.html</link>
-        <guid isPermaLink="true">http://biskilicious.github.io/mac/python/oracle/cx_oracle/2016/07/21/cx_Oracle.html</guid>
-        
-        
-        <category>Mac</category>
-        
-        <category>Python</category>
-        
-        <category>Oracle</category>
-        
-        <category>cx_Oracle</category>
+        <category>development</category>
         
       </item>
     

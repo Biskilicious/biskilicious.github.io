@@ -2,7 +2,7 @@
 layout: post
 title:  "Configuring cx_Oracle for Python on Mac El Capitan"
 date:   2016-07-21 15:03:09 -0700
-categories: Mac Python Oracle cx_Oracle
+categories: development
 ---
 It took me  along time to configure Oracle Instant Client on my Macbook.  I spent abut 6 hours reading through various blog posts and other recommendations on the web that took me down several different rabbit holes. I wanted to take a minute to document the steps in the event that someone else experiences the same types of issues that I had.  
 

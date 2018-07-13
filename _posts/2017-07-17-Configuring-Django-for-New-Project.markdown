@@ -2,7 +2,7 @@
 layout: post
 title:  "Configuring Django for a New Project"
 date:   2017-07-17 21:03:09 -0700
-categories: Mac Python Django Configuration
+categories: development
 ---
 I just completed installing/upgrading Django on this machine. I will now walk through the configuration, setup and first project to get the environment created for the Insurance Rating Application. 
 

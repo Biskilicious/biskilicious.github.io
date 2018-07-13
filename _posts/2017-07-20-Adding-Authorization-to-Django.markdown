@@ -2,7 +2,7 @@
 layout: post
 title:  "Adding Authorization to Forms and Views in Django"
 date:   2017-07-20 13:23:00 -0700
-categories: Mac Python Django Application
+categories: development
 ---
 Now that the application is working end-to-end for the end-user, I want to start restricting what certain groups can and can't see. Namely, I want the application to display the entire list of quotes to a solicitor (or insurer) and restrict the individual quotes to just the user that created them. So, the index should return all quotes if you are a solicitor and only those quotes that you created if you are a customer. 
 

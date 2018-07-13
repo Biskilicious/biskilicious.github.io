@@ -2,7 +2,7 @@
 layout: post
 title:  "Adding a Second Application in Django"
 date:   2017-07-18 19:51:00 -0700
-categories: Mac Python Django Application
+categories: development
 ---
 This is where I think Django offers a lot more features and functionality. I want to add a registration application where users can Register for the site, then submit more information for adding an address and other pertinent information. This should then be usable to create an overall Application. 
 

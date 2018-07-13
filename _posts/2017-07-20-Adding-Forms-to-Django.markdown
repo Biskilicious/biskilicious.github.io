@@ -2,7 +2,7 @@
 layout: post
 title:  "Adding a Form to my Quote Application in Django"
 date:   2017-07-20 10:29:00 -0700
-categories: Mac Python Django Application
+categories: development
 ---
 Now that everything is working from the admin screens, and I have a user view outside of the admin screen, I need a way to capture the user input as a quote and return the quote_detail for that quote (i.e. the actual quote value). To do this, I know that I need a form for entering the quote from the front-end, so will be using Django's form API to build that form.  
 

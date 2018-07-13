@@ -2,7 +2,7 @@
 layout: post
 title:  "Getting Back to iOS Development Using Swift"
 date:   2016-07-24 14:17:00 -0700
-categories: Mac Swift iOS
+categories: development
 ---
 After taking a break to actually get some work done, I am now returning to XCode to see if I can make some progress on my application. The app itself is not unlike any other business type of apps. I want to capture specific sets of data from the user, save that information to the cloud, then return the collection of data to the user in the form of graphs or charts.  Essentially, it is a progress application where the user will enter weights over time, and the application will display the trend in increased or decreased weight.  It's basic, simple and a good place to start learning to code in iOS.
 

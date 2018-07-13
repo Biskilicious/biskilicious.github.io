@@ -2,7 +2,7 @@
 layout: post
 title:  "Adding Rates and Admin Tweaking in Django"
 date:   2017-07-20 09:56:00 -0700
-categories: Mac Python Django Application
+categories: development
 ---
 
 I have completed more or less the skeleton of functionality for the rating application. Now it is time to start adding more parameters and rates so that I can get a more realistic sense of how it will be rated. I have no idea what the company is using for rates, but will start with something relatively simple.

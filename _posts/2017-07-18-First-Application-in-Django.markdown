@@ -2,7 +2,7 @@
 layout: post
 title:  "Building Out the First Application in Django"
 date:   2017-07-18 12:31:00 -0700
-categories: Mac Python Django Application
+categories: development
 ---
 Now that the basic application has been setup, it is time to start building out the application. In hindsight, I should have named the application so that it was specific to a certain type, for example, farmrateapp, for rating farms. But, I will build this first one as a generic template that I can copy into the other for easier integration.
 

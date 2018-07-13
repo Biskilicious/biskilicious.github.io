@@ -2,7 +2,7 @@
 layout: post
 title:  "Adding Business Logic to the First Application"
 date:   2017-07-18 16:03:00 -0700
-categories: Mac Python Django Application
+categories: development
 ---
 
 Here is where the proverbial rubber hits the road. I have a basic object that is saved to the database via the Admin interface (I will create the form later), and it is being displayed from the front-end. Now, I want to include a new object that sets rates according to the parameters and calculate those rates on the fly based on each of the Quote object's parameters that are passed to it. This should return a QuoteResponse that will be the fundametal basis of how this entire application works.

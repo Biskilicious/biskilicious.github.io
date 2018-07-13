@@ -2,7 +2,7 @@
 layout: post
 title:  "Installing and Configuring Django"
 date:   2017-07-17 18:03:00 -0700
-categories: Mac Python Django
+categories: development
 ---
 I have reviewed and tested several web application frameworks over the years. Most recently, I have reviewed and built a few pages using Angular2. I am returning to Django because it is the most straight-forward web application framework. There is more or less a formula to follow when building new applications and I don't have to spend my time troubleshooting a page. Although I may eventually return to the single page application javascript frameworks, I am more than content to stick with what I know and Django is a perfectly suited application framework. 
 
